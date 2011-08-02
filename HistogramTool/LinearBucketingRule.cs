@@ -1,19 +1,27 @@
-﻿namespace HistogramTool
+﻿using System;
+
+namespace HistogramTool
 {
     public class LinearBucketingRule : IBucketingRule
     {
-        public int DetermineBucket(double value, double bucketWidth)
+        public int DetermineBucket(double value)
         {
-            var bucket = (int)(value / bucketWidth);
+            Guard.IsNotZero(BucketWidth, "BucketWidth", "Zero bucket width");
+
+            var bucket = (int)(value / BucketWidth);
 
             return bucket;
         }
 
-        public double DetermineValue(int bucket, double bucketWidth)
+        public double DetermineValue(int bucket)
         {
-            var value = bucket * bucketWidth;
+            Guard.IsNotZero(BucketWidth, "BucketWidth", "Zero bucket width");
+
+            var value = bucket * BucketWidth;
 
             return value;
         }
+
+        public double BucketWidth { get; set; }
     }
 }

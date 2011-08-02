@@ -20,6 +20,7 @@ namespace HistogramTool
             stubLoader.Expect(x => x.LoadSingleValuedFile("basicHistoData.txt")).Return(basicHistoData).Repeat.Any();
 
             var linearBucketingRule = new LinearBucketingRule();
+            linearBucketingRule.BucketWidth = 10;
 
             H = new Histogram(stubLoader, linearBucketingRule);
         }
@@ -61,21 +62,35 @@ namespace HistogramTool
         public void Histogram_BuildsWithNoConstraints()
         {
             H.LoadSingleValuedFile("basicHistoData.txt");
-            H.BucketWidth = 1000.0f;
 
             H.Build();
 
             Assert.AreEqual(7, H.Buckets[0]);
-            Assert.AreEqual(1, H.Buckets[124]);
+            Assert.AreEqual(1, H.Buckets[12423]);
         }
 
         [Test]
         public void Histogram_DeterminesCorrectNumberOfBuckets()
         {
             H.LoadSingleValuedFile("bucketCountTestData");
-            H.BucketWidth = 10d;
 
             Assert.AreEqual(71, H.BucketCount);
+        }
+
+        [Test]
+        public void Histogram_CanBuildFromAggregateValueList()
+        {
+            var rule = new LinearBucketingRule();
+            rule.BucketWidth = 1d;
+            var h = new Histogram(rule);
+            h.Values = new List<double> { 1d, 2d, 3d, 4d };
+
+            h.Build();
+
+            Assert.AreEqual(5, h.BucketCount);
+            Assert.AreEqual(0, h.Buckets[0]);
+            Assert.AreEqual(1, h.Buckets[1]);
+            Assert.AreEqual(1, h.Buckets[4]);
         }
 
         /// <summary>
@@ -85,26 +100,24 @@ namespace HistogramTool
         [Test]
         public void LinearBucketingRule_DeterminesCorrectBucket()
         {
-            var bucketWidth = 10d;
-
             var rule = new LinearBucketingRule();
+            rule.BucketWidth = 10d;
 
-            Assert.AreEqual(0, rule.DetermineBucket(5, bucketWidth));
-            Assert.AreEqual(0, rule.DetermineBucket(9, bucketWidth));
-            Assert.AreEqual(1, rule.DetermineBucket(10, bucketWidth));
-            Assert.AreEqual(125, rule.DetermineBucket(1251, bucketWidth));
+            Assert.AreEqual(0, rule.DetermineBucket(5));
+            Assert.AreEqual(0, rule.DetermineBucket(9));
+            Assert.AreEqual(1, rule.DetermineBucket(10));
+            Assert.AreEqual(125, rule.DetermineBucket(1251));
         }
 
         [Test]
         public void LinearBucketingRule_DeterminesCorrectValue()
         {
-            var bucketWidth = 10d;
-
             var rule = new LinearBucketingRule();
+            rule.BucketWidth = 10d;
 
-            Assert.AreEqual(0d, rule.DetermineValue(0, bucketWidth));
-            Assert.AreEqual(10d, rule.DetermineValue(1, bucketWidth));
-            Assert.AreEqual(100d, rule.DetermineValue(10, bucketWidth));
+            Assert.AreEqual(0d, rule.DetermineValue(0));
+            Assert.AreEqual(10d, rule.DetermineValue(1));
+            Assert.AreEqual(100d, rule.DetermineValue(10));
         }
     }
 }

@@ -2,8 +2,10 @@
 {
     public interface IBucketingRule
     {
-        int DetermineBucket(double value, double bucketWidth);
+        int DetermineBucket(double value);
 
-        double DetermineValue(int bucket, double bucketWidth);
+        double DetermineValue(int bucket);
+
+        double BucketWidth { get; set; }
     }
 }
