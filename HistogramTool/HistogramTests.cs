@@ -12,8 +12,7 @@ namespace HistogramTool
         [SetUp]
         public void SetUp()
         {
-            var linearBucketingRule = new LinearBucketingRule();
-            linearBucketingRule.BucketWidth = 10;
+            var linearBucketingRule = new LinearBucketingRule(10d);
 
             H = new Histogram(linearBucketingRule);
         }
@@ -28,8 +27,7 @@ namespace HistogramTool
         public void Histogram_BuildsFromValueList()
         {
             var values = new List<double>() { 1d, 2d, 3d, 4d, 5d };
-            var rule = new LinearBucketingRule();
-            rule.BucketWidth = 1d;
+            var rule = new LinearBucketingRule(1d);
             var h = new Histogram(rule);
 
             h.Build(values);
@@ -45,13 +43,12 @@ namespace HistogramTool
         [Test]
         public void LinearBucketingRule_DeterminesCorrectBucket()
         {
-            var rule = new LinearBucketingRule();
-            rule.BucketWidth = 10d;
+            var rule = new LinearBucketingRule(10d);
 
-            Assert.AreEqual(0, rule.DetermineBucket(5));
-            Assert.AreEqual(0, rule.DetermineBucket(9));
-            Assert.AreEqual(1, rule.DetermineBucket(10));
-            Assert.AreEqual(125, rule.DetermineBucket(1251));
+            Assert.AreEqual(0, rule.DetermineBucket(5d));
+            Assert.AreEqual(0, rule.DetermineBucket(9d));
+            Assert.AreEqual(1, rule.DetermineBucket(10d));
+            Assert.AreEqual(125, rule.DetermineBucket(1251d));
         }
 
         [Test]

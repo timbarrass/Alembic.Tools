@@ -1,9 +1,17 @@
-﻿using System;
-
-namespace HistogramTool
+﻿namespace HistogramTool
 {
     public class LinearBucketingRule : IBucketingRule
     {
+        public LinearBucketingRule()
+        {
+            BucketWidth = 3.14d;
+        }
+
+        public LinearBucketingRule(double bucketWidth)
+        {
+            BucketWidth = bucketWidth;
+        }
+
         public int DetermineBucket(double value)
         {
             Guard.IsNotZero(BucketWidth, "BucketWidth", "Zero bucket width");

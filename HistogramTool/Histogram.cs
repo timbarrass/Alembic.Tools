@@ -6,8 +6,6 @@ namespace HistogramTool
 {
     public class Histogram
     {
-        private double _bucketWidth;
-        private int[] _buckets;
         private IBucketingRule _bucketingRule;
 
         public Histogram() : this(new LinearBucketingRule())
@@ -21,7 +19,7 @@ namespace HistogramTool
 
         public void Build(List<double> values)
         {
-            Guard.IsNotNull(values, "values", "No histogram data has been loaded yet.");
+            Guard.IsNotNull(values, "values", "Null values ref passed.");
 
             var bucketCount = (int)(values.Max() / BucketingRule.BucketWidth) + 1;
             Buckets = new int[bucketCount];
@@ -39,6 +37,5 @@ namespace HistogramTool
         {
             get { return _bucketingRule; }
         }
-
     }
 }
