@@ -8,21 +8,15 @@ namespace HistogramTool
     {
         private double _bucketWidth;
         private int[] _buckets;
-        private IHistogramDataLoader _dataLoader;
         private IBucketingRule _bucketingRule;
 
-        public Histogram() : this(new FileDataLoader(), new LinearBucketingRule())
+        public Histogram() : this(new LinearBucketingRule())
         {
         }
 
-        public Histogram(IHistogramDataLoader dataLoader, IBucketingRule bucketingRule)
+        public Histogram(IBucketingRule bucketingRule)
         {
-            _dataLoader = dataLoader;
             _bucketingRule = bucketingRule;
-        }
-
-        public Histogram(IBucketingRule bucketingRule) : this(new FileDataLoader(), bucketingRule)
-        {
         }
 
         public void Build(List<double> values)
@@ -40,11 +34,6 @@ namespace HistogramTool
         }
 
         public int[] Buckets { get; set; }
-
-        private IHistogramDataLoader DataLoader
-        {
-            get { return _dataLoader; }
-        }
 
         private IBucketingRule BucketingRule
         {
