@@ -17,7 +17,7 @@ namespace HistogramTool
             _bucketingRule = bucketingRule;
         }
 
-        public void Build(List<double> values)
+        public void Build(IList<double> values)
         {
             Guard.IsNotNull(values, "values", "Null values ref passed.");
 
