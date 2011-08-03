@@ -32,65 +32,17 @@ namespace HistogramTool
         }
 
         [Test]
-        public void Histogram_LoadsBasicTextFile()
+        public void Histogram_BuildsFromValueList()
         {
-            var h = new Histogram();
-
-            h.LoadSingleValuedFile("basicHistoData.txt");
-
-            Assert.AreEqual(8, h.DataCount);
-        }
-
-        // TODO: max,min are associated with the value set. The more I think about it the more it seems the Histo should be related to the value set by aggregation, not composition
-        [Test]
-        public void Histogram_ReturnsMinimumValue()
-        {
-            H.LoadSingleValuedFile("basicHistoData.txt");
-
-            Assert.AreEqual(0d, H.Min());
-        }
-
-        [Test]
-        public void Histogram_ReturnsMaximumValue()
-        {
-            H.LoadSingleValuedFile("basicHistoData.txt");
-
-            Assert.AreEqual(124235d, H.Max());
-        }
-
-        [Test]
-        public void Histogram_BuildsWithNoConstraints()
-        {
-            H.LoadSingleValuedFile("basicHistoData.txt");
-
-            H.Build();
-
-            Assert.AreEqual(7, H.Buckets[0]);
-            Assert.AreEqual(1, H.Buckets[12423]);
-        }
-
-        [Test]
-        public void Histogram_DeterminesCorrectNumberOfBuckets()
-        {
-            H.LoadSingleValuedFile("bucketCountTestData");
-
-            Assert.AreEqual(71, H.BucketCount);
-        }
-
-        [Test]
-        public void Histogram_CanBuildFromAggregateValueList()
-        {
+            var values = new List<double>() { 1d, 2d, 3d, 4d, 5d };
             var rule = new LinearBucketingRule();
             rule.BucketWidth = 1d;
             var h = new Histogram(rule);
-            h.Values = new List<double> { 1d, 2d, 3d, 4d };
 
-            h.Build();
+            h.Build(values);
 
-            Assert.AreEqual(5, h.BucketCount);
             Assert.AreEqual(0, h.Buckets[0]);
             Assert.AreEqual(1, h.Buckets[1]);
-            Assert.AreEqual(1, h.Buckets[4]);
         }
 
         /// <summary>

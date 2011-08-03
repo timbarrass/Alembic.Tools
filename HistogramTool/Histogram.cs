@@ -6,7 +6,6 @@ namespace HistogramTool
 {
     public class Histogram
     {
-        private IList<double> _values;
         private double _bucketWidth;
         private int[] _buckets;
         private IHistogramDataLoader _dataLoader;
@@ -26,40 +25,14 @@ namespace HistogramTool
         {
         }
 
-        public void LoadSingleValuedFile(string fileName)
+        public void Build(List<double> values)
         {
-            Values = DataLoader.LoadSingleValuedFile(fileName);
-        }
+            Guard.IsNotNull(values, "values", "No histogram data has been loaded yet.");
 
-        public IList<double> Values
-        {
-            get
-            {
-                Guard.IsNotNull(_values, "values", "No histogram data has been loaded yet.");
+            var bucketCount = (int)(values.Max() / BucketingRule.BucketWidth) + 1;
+            Buckets = new int[bucketCount];
 
-                return _values;
-            }
-            set
-            {
-                _values = value;
-            }
-        }
-
-        public int DataCount
-        {
-            get
-            {      
-                return Values.Count;
-            }
-        }
-
-        public void Build()
-        {
-            Guard.IsNotNull(_values, "values", "No histogram data has been loaded yet.");
-            
-            Buckets = new int[BucketCount];
-
-            foreach(var v in _values)
+            foreach (var v in values)
             {
                 var bucket = BucketingRule.DetermineBucket(v);
                 Buckets[bucket]++;
@@ -67,25 +40,6 @@ namespace HistogramTool
         }
 
         public int[] Buckets { get; set; }
-
-        public double Max()
-        {
-            Guard.IsNotNull(_values, "values", "No histogram data has been loaded yet.");
-
-            return _values.Max<double>();
-        }
-
-        public double Min()
-        {
-            Guard.IsNotNull(_values, "values", "No histogram data has been loaded yet.");
-
-            return _values.Min<double>();
-        }
-
-        public int BucketCount
-        {
-            get { return (int)(Max() / BucketingRule.BucketWidth) + 1; }
-        }
 
         private IHistogramDataLoader DataLoader
         {
@@ -96,5 +50,6 @@ namespace HistogramTool
         {
             get { return _bucketingRule; }
         }
+
     }
 }
