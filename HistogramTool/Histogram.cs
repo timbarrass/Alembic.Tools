@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace HistogramTool
 {
@@ -21,13 +20,24 @@ namespace HistogramTool
         {
             Guard.IsNotNull(values, "values", "Null values ref passed.");
 
-            var bucketCount = (int)(values.Max() / BucketingRule.BucketWidth) + 1;
+            var bucketCount = _bucketingRule.DetermineBucketCount();
             Buckets = new int[bucketCount];
 
             foreach (var v in values)
             {
-                var bucket = BucketingRule.DetermineBucket(v);
-                Buckets[bucket]++;
+                if (_bucketingRule.IsHigh(v))   // ToDo: looks too fluent, perhaps misleadingly so
+                {
+                    High++;
+                }
+                else if (_bucketingRule.IsLow(v))
+                {
+                    Low++;
+                }
+                else
+                {
+                    var bucket = BucketingRule.DetermineBucket(v);
+                    Buckets[bucket]++;
+                }
             }
         }
 
@@ -37,5 +47,9 @@ namespace HistogramTool
         {
             get { return _bucketingRule; }
         }
+
+        public int High { get; private set; }
+
+        public int Low { get; private set; }
     }
 }

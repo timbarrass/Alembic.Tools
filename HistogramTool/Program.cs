@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace HistogramTool
 {
@@ -6,11 +7,11 @@ namespace HistogramTool
     {
         static void Main(string[] args)
         {
-            var loader = new FileDataLoader();
-            var rule = new LinearBucketingRule(10d);
-            var histo = new Histogram(rule);
+            var loader = new FileDataLoader(args[0]);
+            var data = loader.Load();
 
-            var data = loader.LoadSingleValuedFile(args[0]);
+            var rule = new LinearBucketingRule(Convert.ToDouble(args[1]), 0d, data.Max());
+            var histo = new Histogram(rule);
 
             histo.Build(data);
 

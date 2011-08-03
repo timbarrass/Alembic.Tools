@@ -2,10 +2,16 @@
 {
     public interface IBucketingRule
     {
-        int DetermineBucket(double value);
+        long DetermineBucket(double value);
+
+        long DetermineBucketCount();
 
         double DetermineValue(int bucket);
 
         double BucketWidth { get; set; }
+
+        bool IsHigh(double value);
+
+        bool IsLow(double value);
     }
 }
