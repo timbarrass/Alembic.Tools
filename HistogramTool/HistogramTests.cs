@@ -79,7 +79,7 @@ namespace HistogramTool
         {
             var rule = new LinearBucketingRule(10d, 0d, 100d);
 
-            Assert.AreEqual(11, rule.DetermineBucketCount());
+            Assert.AreEqual(10, rule.DetermineBucketCount());
         }
 
         [Test]
@@ -128,7 +128,7 @@ namespace HistogramTool
             var rule = new LinearBucketingRule(values);
 
             Assert.AreEqual(1d, rule.Min);
-            Assert.AreEqual(6d, rule.Max);
+            Assert.AreEqual(6.5d, rule.Max);
             Assert.AreEqual(11, rule.DetermineBucketCount());
         }
     }
