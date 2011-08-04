@@ -2,6 +2,7 @@
 It allows the specification of a range of interesting values, and
 buckets high and low values outside of that range.
 
+
 Copyright (c) 2011 Tim Barrass tim.barrass@gmail.com All rights reserved.
 
 // Permission is hereby granted, free of charge, to any person obtaining
