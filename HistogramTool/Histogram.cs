@@ -7,10 +7,6 @@ namespace HistogramTool
     {
         private IBucketingRule _bucketingRule;
 
-        public Histogram() : this(new LinearBucketingRule())
-        {
-        }
-
         public Histogram(IBucketingRule bucketingRule)
         {
             _bucketingRule = bucketingRule;

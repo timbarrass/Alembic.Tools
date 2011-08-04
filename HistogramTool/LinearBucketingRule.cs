@@ -1,14 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HistogramTool
 {
     public class LinearBucketingRule : IBucketingRule
     {
-        public LinearBucketingRule() : this(3.14d)
-        {
-        }
-
-        public LinearBucketingRule(double bucketWidth) : this(bucketWidth, Double.MinValue, Double.MaxValue)
+        public LinearBucketingRule(double bucketWidth, IList<double> values) : this(bucketWidth, values.Min(), values.Max())
         {
         }
 
@@ -17,6 +15,10 @@ namespace HistogramTool
             Min = minimum;
             Max = maximum;
             BucketWidth = bucketWidth;
+        }
+
+        public LinearBucketingRule(IList<double> values) : this((values.Max() - values.Min())/10d, values.Min(), values.Max())
+        {
         }
 
         public double Min { get; set; }
@@ -59,7 +61,7 @@ namespace HistogramTool
 
         public long DetermineBucketCount()
         {
-            double c = (Max / BucketWidth) + 1l;
+            double c = ((Max - Min) / BucketWidth) + 1L;
             if (c > long.MaxValue)
                 throw new ArithmeticException("Your linear bucketing rule settings generate too many buckets");
             return (long)c;

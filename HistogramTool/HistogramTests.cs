@@ -19,12 +19,6 @@ namespace HistogramTool
         }
 
         [Test]
-        public void Histogram_CanBeInstantiated()
-        {
-            var h = new Histogram();
-        }
-
-        [Test]
         public void Histogram_BuildsFromValueList()
         {
             var values = new List<double>() { 1d, 2d, 3d, 4d, 5d };
@@ -125,6 +119,17 @@ namespace HistogramTool
             Assert.AreEqual(3, h.High);
             Assert.AreEqual(1, h.Buckets[1]);
             Assert.AreEqual(2, h.Buckets[3]);
+        }
+
+        [Test]
+        public void LinearBucketingRule_ConfiguresFromValues()
+        {
+            var values = new List<double>() { 1d, 3.11d, 4.5d, 5.5d, 5.5d, 6d, 6d, 6d };
+            var rule = new LinearBucketingRule(values);
+
+            Assert.AreEqual(1d, rule.Min);
+            Assert.AreEqual(6d, rule.Max);
+            Assert.AreEqual(11, rule.DetermineBucketCount());
         }
     }
 }

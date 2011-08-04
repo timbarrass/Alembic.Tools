@@ -13,7 +13,13 @@ namespace HistogramTool
         public static void IsNotZero(double value, string parameter, string message = "")
         {
             if (value == 0)
-                throw new ArgumentException(parameter, message);
+                throw new ArgumentException(message, parameter);
+        }
+
+        public static void IsLessThan(double first, double second, string firstParameter, string secondParameter, string message = "")
+        {
+            if (first < second)
+                throw new ArgumentException(message, firstParameter + "-" + secondParameter);
         }
     }
 }
