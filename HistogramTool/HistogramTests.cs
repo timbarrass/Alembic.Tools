@@ -111,5 +111,20 @@ namespace HistogramTool
 
             Assert.AreEqual(1, h.Low);
         }    
+
+        [Test]
+        public void Histogram_BuildsWithHighAndLowBuckets()
+        {
+            var values = new List<double>() { 1d, 3.11d, 4.5d, 5.5d, 5.5d, 6d, 6d, 6d };
+            var rule = new LinearBucketingRule(1d, 2d, 6d);
+            var h = new Histogram(rule);
+
+            h.Build(values);
+
+            Assert.AreEqual(1, h.Low);
+            Assert.AreEqual(3, h.High);
+            Assert.AreEqual(1, h.Buckets[1]);
+            Assert.AreEqual(2, h.Buckets[3]);
+        }
     }
 }
