@@ -2,12 +2,7 @@
 It allows the specification of a range of interesting values, and
 buckets high and low values outside of that range.
 
-Copyright (c) 2011 Tim Barrass <tim.barrass@gmail.com>
-
-[license]
-
-Uses Jonathon Pryor's Mono.Options library for command line parsing 
-under the following license:
+Copyright (c) 2011 Tim Barrass tim.barrass@gmail.com All rights reserved.
 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,3 +22,6 @@ under the following license:
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Uses Jonathon Pryor's Mono.Options library for command line parsing 
+under the same license terms.
