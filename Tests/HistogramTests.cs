@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using HistogramTool;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace HistogramTool
+namespace Tests
 {
     [TestFixture]
     public class HistogramTests
