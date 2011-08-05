@@ -9,6 +9,12 @@ namespace HistogramTool
     {
         static void Main(string[] args)
         {
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Usage: histo -file=<filename> [-w=<bucket width>] [-l=<low value> -h=<high value>]");
+                return;
+            }
+
             var fileName = string.Empty;
             var bucketWidth = 10d;
             var bucketWidthSet = false;

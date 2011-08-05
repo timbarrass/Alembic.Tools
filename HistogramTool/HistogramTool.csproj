@@ -6,10 +6,10 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{4980D0DB-B8F5-465E-8359-E5491B19FDB5}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HistogramTool</RootNamespace>
-    <AssemblyName>histo</AssemblyName>
+    <AssemblyName>HistogramTool</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -34,15 +34,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="FileHelpers">
       <HintPath>..\Externals\FileHelpers\Binaries\DotNet 2.0\FileHelpers.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\Externals\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Rhino.Mocks">
-      <HintPath>..\Externals\Rhino.Mocks-3.6\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -56,7 +53,6 @@
     <Compile Include="FileDataLoader.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="Histogram.cs" />
-    <Compile Include="HistogramTests.cs" />
     <Compile Include="IBucketingRule.cs" />
     <Compile Include="IHistogramDataLoader.cs" />
     <Compile Include="LinearBucketingRule.cs" />
