@@ -22,6 +22,7 @@ namespace HistogramTool
             var lowSet = false;
             var high = 100d;
             var highSet = false;
+            var cumulative = false;
 
             OptionSet p = new OptionSet()
                 .Add("file=", f => fileName = f)
@@ -39,7 +40,8 @@ namespace HistogramTool
                                      {
                                          high = Convert.ToDouble(h);
                                          highSet = true;
-                                     });
+                                     })
+                .Add("cumulative|c", c => { cumulative = true; });
             var unparsed = p.Parse(args);
 
             Guard.IsLessThan(high, low, "high", "low", "Your low limit must be less than your high limit.");
@@ -64,17 +66,25 @@ namespace HistogramTool
 
             histo.Build(data);
 
-            Display(rule, histo);
+            Display(rule, histo, cumulative);
         }
 
-        private static void Display(LinearBucketingRule rule, Histogram histogram)
+        private static void Display(LinearBucketingRule rule, Histogram histogram, bool cumulative)
         {
             var total = 0;
             Console.WriteLine("Low (< " + rule.Min + ") \t" + histogram.Low);
             for(int i = 0; i < histogram.Buckets.Length; i++)
             {
-                Console.WriteLine(rule.DetermineValue(i) + "\t" + histogram.Buckets[i]);
                 total += histogram.Buckets[i];
+                if (cumulative)
+                {
+                    Console.WriteLine(rule.DetermineValue(i) + "\t" + total);
+                }
+                else
+                {
+                    Console.WriteLine(rule.DetermineValue(i) + "\t" + histogram.Buckets[i]);
+                }
+
             }
             Console.WriteLine("High (>= " + rule.Max + ") \t" + histogram.High);
             total += histogram.Low + histogram.High;
