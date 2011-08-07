@@ -23,3 +23,5 @@ Copyright (c) 2011 Tim Barrass tim.barrass@gmail.com All rights reserved.
 
 Uses Jonathon Pryor's Mono.Options library for command line parsing 
 under the same license terms.
+
+Uses Marcos Meli's FileHelpers library: http://www.filehelpers.com/.
