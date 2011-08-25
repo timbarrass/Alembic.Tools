@@ -44,6 +44,22 @@ namespace TimeSeriesTool
         }
 
         [Test]
+        public void TimeSeriesTool_BuildsVariableStepTimeSeries_FromSortedStartsAndEnds()
+        {
+            var starts = new DateTime[] { DateTime.Parse("22-08-2011 17:05:34.222"), DateTime.Parse("22-08-2011 17:07:34.222"), DateTime.Parse("22-08-2011 17:09:34.222") };
+            var ends = new DateTime[] { DateTime.Parse("22-08-2011 17:06:34.222"), DateTime.Parse("22-08-2011 17:08:34.222"), DateTime.Parse("22-08-2011 17:15:34.222") };
+
+            var t = new TimeSeries();
+            IList<DateTime> timestamp;
+            IList<int> runningCount;
+
+            t.BuildVariableStepTimeSeries(starts, ends, out timestamp, out runningCount);
+
+            Assert.AreEqual(6, timestamp.Count);
+            
+        }
+
+        [Test]
         public void TimeSeriesTool_BuildsTimeSeriesFromStartsAndEnds()
         {
             var startsAndEnds = new StartAndEndPair[]
@@ -65,7 +81,9 @@ namespace TimeSeriesTool
 
             Assert.AreEqual(3, t.Timestamps.Length);
             Assert.AreEqual(DateTime.Parse("22-08-2011 17:05:34.222"), t.Timestamps[0]);
-            Assert.AreEqual(DateTime.Parse("22-08-2011 17:05:34.222").AddMinutes(5), t.Timestamps[0]);
+            Assert.AreEqual(DateTime.Parse("22-08-2011 17:05:34.222").AddMinutes(5), t.Timestamps[1]);
+
+            // ToDo: Asserts around values at those timestamps
         }
 
         [Test]
@@ -88,10 +106,6 @@ namespace TimeSeriesTool
             var t = new TimeSeries();
 
             t.Build(startsAndEnds);
-
-            Assert.AreEqual(3, t.Timestamps.Length);
-            Assert.AreEqual(DateTime.Parse("22-08-2011 17:05:34.222"), t.Timestamps[0]);
-            Assert.AreEqual(DateTime.Parse("22-08-2011 17:05:34.222").AddMinutes(5), t.Timestamps[0]);
         }
     }
 
@@ -141,39 +155,11 @@ namespace TimeSeriesTool
             
             BuildSortedStartsAndEnds(startsAndEnds, out starts, out ends);
 
-            // ToDo: refactor ... to stateful TimeSeriesBuilder? Requires sorted starts and ends?
-            int currentIndex = 0;
-            int otherIndex = 0;
-            int runningCount = 0;
-            var currentList = starts;
-            var otherList = ends;
-            var incdec = 1;
+            IList<DateTime> timestamp;
+            IList<int> value;
+            BuildVariableStepTimeSeries(starts, ends);
 
-            var timestamp = new List<DateTime>();
-            var value = new List<int>();
-
-            while (currentIndex < currentList.Length - 1)
-            {
-                runningCount += incdec;
-                timestamp.Add(currentList[currentIndex]);
-                value.Add(runningCount);
-
-                currentIndex++;
-                if (currentList[currentIndex] > otherList[otherIndex])
-                {
-                    var tempIndex = currentIndex;
-                    currentIndex = otherIndex;
-                    otherIndex = tempIndex;
-                    var tempList = currentList;
-                    currentList = otherList;
-                    otherList = tempList;
-
-                    incdec *= -1;
-                }
-            }
-
-            // ToDo: refactor to stateful builder?
-            if(value.Count <= 2)
+            if(VariableStepCount.Count <= 2)
             {
                 throw new InvalidOperationException("Can't generate timeseries for 2 or fewer tasks.");
             }
@@ -181,7 +167,11 @@ namespace TimeSeriesTool
             _timestamps = new DateTime[starts.Length];
             _values = new double[starts.Length];
             _highwater = new double[starts.Length];
+            BuildConstantSteppedTimeSeries(VariableStepTimestamp, VariableStepCount);
+        }
 
+        public void BuildConstantSteppedTimeSeries(IList<DateTime> timestamp, IList<int> value)
+        {
             var index = 0;
             // ToDo: make delta configurable
             var dt = new TimeSpan(0, 5, 0);
@@ -194,7 +184,7 @@ namespace TimeSeriesTool
 
                 var highwater = 0;
                 while (index < timestamp.Count - 1
-                    && timestamp[index + 1] < next)
+                       && timestamp[index + 1] < next)
                 {
                     index++;
                     if (highwater < value[index])
@@ -209,6 +199,50 @@ namespace TimeSeriesTool
                 counter++;
             }
         }
+
+        /// <summary>
+        /// ToDo: refactor ... to stateful TimeSeriesBuilder? Requires sorted starts and ends?
+        /// </summary>
+        /// <param name="starts"></param>
+        /// <param name="ends"></param>
+        /// <param name="VariableStepTimestamp"></param>
+        /// <param name="VariableStepCount"></param>
+        public void BuildVariableStepTimeSeries(DateTime[] starts, DateTime[] ends)
+        {
+            int currentIndex = 0;
+            int otherIndex = 0;
+            int runningCount = 0;
+            var currentList = starts;
+            var otherList = ends;
+            var incdec = 1;
+
+            VariableStepTimestamp = new List<DateTime>();
+            VariableStepCount = new List<int>();
+
+            while (currentIndex < currentList.Length)
+            {
+                runningCount += incdec;
+                VariableStepTimestamp.Add(currentList[currentIndex]);
+                VariableStepCount.Add(runningCount);
+
+                currentIndex++;
+                if (currentIndex == currentList.Length || currentList[currentIndex] > otherList[otherIndex])
+                {
+                    var tempIndex = currentIndex;
+                    currentIndex = otherIndex;
+                    otherIndex = tempIndex;
+                    var tempList = currentList;
+                    currentList = otherList;
+                    otherList = tempList;
+
+                    incdec *= -1;
+                }
+            }
+        }
+
+        protected IList<int> VariableStepCount { get; set; }
+
+        protected IList<DateTime> VariableStepTimestamp { get; set; }
 
         // ToDo: more state for stateful builder?
         public double[] Highwater
