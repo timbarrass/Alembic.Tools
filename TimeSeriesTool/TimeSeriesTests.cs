@@ -50,12 +50,10 @@ namespace TimeSeriesTool
             var ends = new DateTime[] { DateTime.Parse("22-08-2011 17:06:34.222"), DateTime.Parse("22-08-2011 17:08:34.222"), DateTime.Parse("22-08-2011 17:15:34.222") };
 
             var t = new TimeSeries();
-            IList<DateTime> timestamp;
-            IList<int> runningCount;
+            
+            t.BuildVariableStepTimeSeries(starts, ends);
 
-            t.BuildVariableStepTimeSeries(starts, ends, out timestamp, out runningCount);
-
-            Assert.AreEqual(6, timestamp.Count);
+            Assert.AreEqual(6, t.VariableStepTimestamp.Count);
             
         }
 
@@ -163,42 +161,35 @@ namespace TimeSeriesTool
             {
                 throw new InvalidOperationException("Can't generate timeseries for 2 or fewer tasks.");
             }
-            
-            _timestamps = new DateTime[starts.Length];
-            _values = new double[starts.Length];
-            _highwater = new double[starts.Length];
-            BuildConstantSteppedTimeSeries(VariableStepTimestamp, VariableStepCount);
-        }
 
-        public void BuildConstantSteppedTimeSeries(IList<DateTime> timestamp, IList<int> value)
-        {
             var index = 0;
             // ToDo: make delta configurable
             var dt = new TimeSpan(0, 5, 0);
-            var current = timestamp[0];
+            var current = VariableStepTimestamp[0];
 
             int counter = 0;
-            while (current < timestamp[timestamp.Count - 2])
+            while (current < VariableStepTimestamp[VariableStepTimestamp.Count - 2])
             {
                 var next = current.AddTicks(dt.Ticks);
 
                 var highwater = 0;
-                while (index < timestamp.Count - 1
-                       && timestamp[index + 1] < next)
+                while (index < VariableStepTimestamp.Count - 1
+                       && VariableStepTimestamp[index + 1] < next)
                 {
                     index++;
-                    if (highwater < value[index])
-                        highwater = value[index];
+                    if (highwater < VariableStepCount[index])
+                        highwater = VariableStepCount[index];
                 }
 
                 Timestamps[counter] = current;
-                Values[counter] = value[index];
+                Values[counter] = VariableStepCount[index];
                 Highwater[counter] = highwater;
-                
+
                 current = next;
                 counter++;
             }
         }
+
 
         /// <summary>
         /// ToDo: refactor ... to stateful TimeSeriesBuilder? Requires sorted starts and ends?
@@ -240,9 +231,9 @@ namespace TimeSeriesTool
             }
         }
 
-        protected IList<int> VariableStepCount { get; set; }
+        public IList<int> VariableStepCount { get; set; }
 
-        protected IList<DateTime> VariableStepTimestamp { get; set; }
+        public IList<DateTime> VariableStepTimestamp { get; set; }
 
         // ToDo: more state for stateful builder?
         public double[] Highwater
