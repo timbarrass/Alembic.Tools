@@ -44,12 +44,12 @@ namespace TimeSeriesTool
         }
 
         [Test]
-        public void TimeSeriesTool_BuildsVariableStepTimeSeries_FromSortedStartsAndEnds()
+        public void TimeSeriesBuilder_BuildsVariableStepTimeSeries_FromSortedStartsAndEnds()
         {
             var starts = new DateTime[] { DateTime.Parse("22-08-2011 17:05:34.222"), DateTime.Parse("22-08-2011 17:07:34.222"), DateTime.Parse("22-08-2011 17:09:34.222") };
             var ends = new DateTime[] { DateTime.Parse("22-08-2011 17:06:34.222"), DateTime.Parse("22-08-2011 17:08:34.222"), DateTime.Parse("22-08-2011 17:15:34.222") };
 
-            var t = new TimeSeries();
+            var t = new TimeSeriesBuilder();
             
             t.BuildVariableStepTimeSeries(starts, ends);
 
@@ -125,58 +125,55 @@ namespace TimeSeriesTool
 
         public void Build(StartAndEndPair[] startsAndEnds)
         {
-            var builder = new TimeSeriesBuilder();
-
-            DateTime[] starts;
-            DateTime[] ends;    
-            builder.BuildSortedStartsAndEnds(startsAndEnds, out starts, out ends);
-
-            BuildVariableStepTimeSeries(starts, ends);
-
-            if(VariableStepCount.Count <= 2)
+            using (var builder = new TimeSeriesBuilder())
             {
-                throw new InvalidOperationException("Can't generate timeseries for 2 or fewer tasks.");
-            }
+                DateTime[] starts;
+                DateTime[] ends;
+                builder.BuildSortedStartsAndEnds(startsAndEnds, out starts, out ends);
 
-            BuildFixedStepTimeSeries();
+                builder.BuildVariableStepTimeSeries(starts, ends);
+
+                builder.BuildFixedStepTimeSeries(out _timestamps, out _values, out _highwater);
+            }
         }
 
-        public void BuildFixedStepTimeSeries()
+        public double[] Highwater
         {
-            var index = 0;
-            // ToDo: make delta configurable
-            var dt = new TimeSpan(0, 5, 0);
-            var current = VariableStepTimestamp[0];
-            var last = VariableStepTimestamp[VariableStepTimestamp.Count - 1];
-            var steps = 1+ (last.Ticks - current.Ticks) / dt.Ticks;
-
-            Timestamps = new DateTime[steps];
-            Values = new double[steps];
-            Highwater = new double[steps];
-
-            int counter = 0;
-            while (current < last)
-            {
-                var next = current.AddTicks(dt.Ticks);
-
-                var highwater = 0;
-                while (index < VariableStepTimestamp.Count - 1
-                       && VariableStepTimestamp[index + 1] < next)
-                {
-                    index++;
-                    if (highwater < VariableStepCount[index])
-                        highwater = VariableStepCount[index];
-                }
-
-                Timestamps[counter] = current;
-                Values[counter] = VariableStepCount[index];
-                Highwater[counter] = highwater;
-
-                current = next;
-                counter++;
-            }
+            get { return _highwater; }
         }
 
+        public Double[] Values
+        {
+            get { return _values; }
+        }
+
+        public DateTime[] Timestamps
+        {
+            get { return _timestamps; }
+        }
+    }
+
+    /// <summary>
+    /// Intended to be a short-lived class that holds state associated with processing a timeseries
+    /// </summary>
+    public class TimeSeriesBuilder : IDisposable
+    {       
+        public void BuildSortedStartsAndEnds(StartAndEndPair[] startsAndEnds, out DateTime[] starts, out DateTime[] ends)
+        {
+            starts = new DateTime[startsAndEnds.Length];
+            ends = new DateTime[startsAndEnds.Length];
+
+            int count = 0;
+            foreach(var pair in startsAndEnds)
+            {
+                starts[count] = pair.Start;
+                ends[count] = pair.End;
+                count++;
+            }
+
+            Array.Sort(starts);
+            Array.Sort(ends);
+        }
 
         /// <summary>
         /// ToDo: refactor ... to stateful TimeSeriesBuilder? Requires sorted starts and ends?
@@ -216,63 +213,72 @@ namespace TimeSeriesTool
                     incdec *= -1;
                 }
             }
+
+            if (VariableStepCount.Count <= 2)
+            {
+                throw new InvalidOperationException("Can't generate timeseries for 2 or fewer tasks.");
+            }
         }
 
         public IList<int> VariableStepCount { get; set; }
 
         public IList<DateTime> VariableStepTimestamp { get; set; }
 
-        public double[] Highwater
+        public void BuildFixedStepTimeSeries(out DateTime[] timestamps, out double[] values, out double[] highwater)
         {
-            get {
-                return _highwater;
-            }
-            set {
-                _highwater = value;
-            }
-        }
+            var index = 0;
+            // ToDo: make delta configurable
+            var dt = new TimeSpan(0, 5, 0);
+            var current = VariableStepTimestamp[0];
+            var last = VariableStepTimestamp[VariableStepTimestamp.Count - 1];
+            var steps = 1+ (last.Ticks - current.Ticks) / dt.Ticks;
 
-        public Double[] Values
-        {
-            get {
-                return _values;
-            }
-            set {
-                _values = value;
-            }
-        }
+            timestamps = new DateTime[steps];
+            values = new double[steps];
+            highwater = new double[steps];
 
-        public DateTime[] Timestamps
-        {
-            get {
-                return _timestamps;
-            }
-            set {
-                _timestamps = value;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Intended to be a short-lived class that holds state associated with processing a timeseries
-    /// </summary>
-    public class TimeSeriesBuilder
-    {       
-        public void BuildSortedStartsAndEnds(StartAndEndPair[] startsAndEnds, out DateTime[] starts, out DateTime[] ends)
-        {
-            starts = new DateTime[startsAndEnds.Length];
-            ends = new DateTime[startsAndEnds.Length];
-
-            int count = 0;
-            foreach(var pair in startsAndEnds)
+            int counter = 0;
+            while (current < last)
             {
-                starts[count] = pair.Start;
-                ends[count] = pair.End;
-                count++;
-            }
+                var next = current.AddTicks(dt.Ticks);
 
-            Array.Sort(starts);
-            Array.Sort(ends);
+                var currentHighwater = 0;
+                while (index < VariableStepTimestamp.Count - 1
+                       && VariableStepTimestamp[index + 1] < next)
+                {
+                    index++;
+                    if (currentHighwater < VariableStepCount[index])
+                        currentHighwater = VariableStepCount[index];
+                }
+
+                timestamps[counter] = current;
+                values[counter] = VariableStepCount[index];
+                highwater[counter] = currentHighwater;
+
+                current = next;
+                counter++;
+            }
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+            Dispose(true);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if(disposing)
+            {
+                // we'll clear our arrays proactively
+                VariableStepTimestamp.Clear();
+                VariableStepCount.Clear();
+            }
+        }
+
+        ~TimeSeriesBuilder()
+        {
+            Dispose(false);
         }
     }
 }
