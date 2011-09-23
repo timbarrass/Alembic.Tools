@@ -92,13 +92,7 @@ namespace TimeSeriesTool
                                     {
                                         new StartAndEndPair(
                                             DateTime.Parse("22-08-2011 17:05:34.222"), 
-                                            DateTime.Parse("22-08-2011 17:06:34.222")),
-                                        new StartAndEndPair(
-                                            DateTime.Parse("22-08-2011 17:07:34.222"), 
-                                            DateTime.Parse("22-08-2011 17:08:34.222")),
-                                        new StartAndEndPair(
-                                            DateTime.Parse("22-08-2011 17:09:34.222"), 
-                                            DateTime.Parse("22-08-2011 17:15:34.222"))
+                                            DateTime.Parse("22-08-2011 17:06:34.222"))
                                     };
 
             var t = new TimeSeries();
@@ -153,8 +147,6 @@ namespace TimeSeriesTool
             
             BuildSortedStartsAndEnds(startsAndEnds, out starts, out ends);
 
-            IList<DateTime> timestamp;
-            IList<int> value;
             BuildVariableStepTimeSeries(starts, ends);
 
             if(VariableStepCount.Count <= 2)
@@ -166,9 +158,15 @@ namespace TimeSeriesTool
             // ToDo: make delta configurable
             var dt = new TimeSpan(0, 5, 0);
             var current = VariableStepTimestamp[0];
+            var last = VariableStepTimestamp[VariableStepTimestamp.Count - 1];
+            var steps = 1+ (last.Ticks - current.Ticks) / dt.Ticks;
+
+            Timestamps = new DateTime[steps];
+            Values = new double[steps];
+            Highwater = new double[steps];
 
             int counter = 0;
-            while (current < VariableStepTimestamp[VariableStepTimestamp.Count - 2])
+            while (current < last)
             {
                 var next = current.AddTicks(dt.Ticks);
 
