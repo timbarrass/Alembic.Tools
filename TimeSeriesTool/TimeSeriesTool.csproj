@@ -46,6 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="StartAndEndPair.cs" />
+    <Compile Include="TimeSeries.cs" />
+    <Compile Include="TimeSeriesBuilder.cs" />
     <Compile Include="TimeSeriesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -54,6 +57,11 @@
       <Project>{4980D0DB-B8F5-465E-8359-E5491B19FDB5}</Project>
       <Name>HistogramTool</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="basicTaskData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

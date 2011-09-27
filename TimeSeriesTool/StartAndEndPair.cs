@@ -6,11 +6,15 @@ namespace TimeSeriesTool
     [DelimitedRecord(",")]
     public class StartAndEndPair
     {
-        [FieldConverter(ConverterKind.Date, "dd-MM-yyyy hh24:mi:ss")] 
+        [FieldConverter(ConverterKind.Date, "dd-MM-yyyy HH:mm:ss.fffff")] 
         public DateTime Start;
 
-        [FieldConverter(ConverterKind.Date, "dd-MM-yyyy hh24:mi:ss")] 
+        [FieldConverter(ConverterKind.Date, "dd-MM-yyyy HH:mm:ss.fffff")] 
         public DateTime End;
+
+        public StartAndEndPair()
+        {
+        }
 
         public StartAndEndPair(DateTime start, DateTime end)
         {

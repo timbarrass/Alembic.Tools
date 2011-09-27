@@ -56,7 +56,6 @@
     <Compile Include="IBucketingRule.cs" />
     <Compile Include="IHistogramDataLoader.cs" />
     <Compile Include="LinearBucketingRule.cs" />
-    <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SingleValue.cs" />
   </ItemGroup>

@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Histo", "Histo\Histo.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeSeriesTool", "TimeSeriesTool\TimeSeriesTool.csproj", "{2FF1ABA1-5040-460B-8F8B-061114C978A6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TSeries", "TSeries\TSeries.csproj", "{166251E6-48E2-4A73-8D52-90252CF57E85}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,16 @@ Global
 		{2FF1ABA1-5040-460B-8F8B-061114C978A6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{2FF1ABA1-5040-460B-8F8B-061114C978A6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{2FF1ABA1-5040-460B-8F8B-061114C978A6}.Release|x86.ActiveCfg = Release|Any CPU
+		{166251E6-48E2-4A73-8D52-90252CF57E85}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{166251E6-48E2-4A73-8D52-90252CF57E85}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{166251E6-48E2-4A73-8D52-90252CF57E85}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{166251E6-48E2-4A73-8D52-90252CF57E85}.Debug|x86.ActiveCfg = Debug|x86
+		{166251E6-48E2-4A73-8D52-90252CF57E85}.Debug|x86.Build.0 = Debug|x86
+		{166251E6-48E2-4A73-8D52-90252CF57E85}.Release|Any CPU.ActiveCfg = Release|x86
+		{166251E6-48E2-4A73-8D52-90252CF57E85}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{166251E6-48E2-4A73-8D52-90252CF57E85}.Release|Mixed Platforms.Build.0 = Release|x86
+		{166251E6-48E2-4A73-8D52-90252CF57E85}.Release|x86.ActiveCfg = Release|x86
+		{166251E6-48E2-4A73-8D52-90252CF57E85}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
