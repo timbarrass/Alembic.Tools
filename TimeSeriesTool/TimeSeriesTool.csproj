@@ -49,7 +49,6 @@
     <Compile Include="StartAndEndPair.cs" />
     <Compile Include="TimeSeries.cs" />
     <Compile Include="TimeSeriesBuilder.cs" />
-    <Compile Include="TimeSeriesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

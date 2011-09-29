@@ -48,11 +48,16 @@
   <ItemGroup>
     <Compile Include="HistogramTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimeSeriesTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HistogramTool\HistogramTool.csproj">
       <Project>{4980D0DB-B8F5-465E-8359-E5491B19FDB5}</Project>
       <Name>HistogramTool</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TimeSeriesTool\TimeSeriesTool.csproj">
+      <Project>{2FF1ABA1-5040-460B-8F8B-061114C978A6}</Project>
+      <Name>TimeSeriesTool</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

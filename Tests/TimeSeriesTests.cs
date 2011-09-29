@@ -1,7 +1,8 @@
 ﻿using System;
 using NUnit.Framework;
+using TimeSeriesTool;
 
-namespace TimeSeriesTool
+namespace Tests
 {
     [TestFixture]
     public class TimeSeriesTests
@@ -9,7 +10,7 @@ namespace TimeSeriesTool
         [Test]
         public void TimeSeriesTool_CanBeInstantiated()
         {
-            var t = new TimeSeries(new TimeSpan(0,5,0));
+            var t = new TimeSeries(new TimeSpan(0, 5, 0));
         }
 
         [Test]
@@ -25,7 +26,7 @@ namespace TimeSeriesTool
                                            DateTime.Parse("22-08-2011 17:08:34.222"))
                                     };
 
-            var t = new TimeSeriesBuilder(new TimeSpan(0,5,0));
+            var t = new TimeSeriesBuilder(new TimeSpan(0, 5, 0));
 
             DateTime[] starts;
             DateTime[] ends;
@@ -44,12 +45,12 @@ namespace TimeSeriesTool
             var starts = new DateTime[] { DateTime.Parse("22-08-2011 17:05:34.222"), DateTime.Parse("22-08-2011 17:07:34.222"), DateTime.Parse("22-08-2011 17:09:34.222") };
             var ends = new DateTime[] { DateTime.Parse("22-08-2011 17:06:34.222"), DateTime.Parse("22-08-2011 17:08:34.222"), DateTime.Parse("22-08-2011 17:15:34.222") };
 
-            var t = new TimeSeriesBuilder(new TimeSpan(0,5,0));
-            
+            var t = new TimeSeriesBuilder(new TimeSpan(0, 5, 0));
+
             t.BuildVariableStepTimeSeries(starts, ends);
 
             Assert.AreEqual(6, t.VariableStepTimestamp.Count);
-            
+
         }
 
         [Test]
@@ -68,7 +69,7 @@ namespace TimeSeriesTool
                                             DateTime.Parse("22-08-2011 17:15:34.222"))
                                     };
 
-            var t = new TimeSeries(new TimeSpan(0,5,0));
+            var t = new TimeSeries(new TimeSpan(0, 5, 0));
 
             t.Build(startsAndEnds);
 
@@ -90,7 +91,7 @@ namespace TimeSeriesTool
                                             DateTime.Parse("22-08-2011 17:06:34.222"))
                                     };
 
-            var t = new TimeSeries(new TimeSpan(0,5,0));
+            var t = new TimeSeries(new TimeSpan(0, 5, 0));
 
             t.Build(startsAndEnds);
         }
