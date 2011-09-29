@@ -117,6 +117,7 @@ namespace TimeSeriesTool
 
             Assert.AreEqual(11, t.Timestamps.Length);
             Assert.AreEqual(DateTime.Parse("22-08-2011 17:06:34.222"), t.Timestamps[1]);
+            Assert.AreEqual(DateTime.Parse("22-08-2011 17:15:34.222"), t.Timestamps[10]);
         }
     }
 }

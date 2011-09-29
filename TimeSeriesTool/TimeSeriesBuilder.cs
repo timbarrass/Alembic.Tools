@@ -77,14 +77,14 @@ namespace TimeSeriesTool
             var dt = FixedStep;
             var current = VariableStepTimestamp[0];
             var last = VariableStepTimestamp[VariableStepTimestamp.Count - 1];
-            var steps = 1+ (last.Ticks - current.Ticks) / dt.Ticks;
+            var steps = 1 + (last.Ticks - current.Ticks) / dt.Ticks;
 
             timestamps = new DateTime[steps];
             values = new double[steps];
             highwater = new double[steps];
 
             int counter = 0;
-            while (current < last)
+            while (current <= last)
             {
                 var next = current.AddTicks(dt.Ticks);
 
