@@ -93,8 +93,8 @@ namespace TimeSeriesTool
                        && VariableStepTimestamp[index + 1] < next)
                 {
                     index++;
-                    if (currentHighwater < VariableStepCount[index])
-                        currentHighwater = VariableStepCount[index];
+                    //if (currentHighwater < VariableStepCount[index])
+                    //    currentHighwater = VariableStepCount[index];
                 }
 
                 timestamps[counter] = current;
