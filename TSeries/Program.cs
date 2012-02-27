@@ -20,10 +20,12 @@ namespace TSeries
             string file = string.Empty;
             string tag = string.Empty;
             bool matchTags = false;
+            int initialCount = 0;
             OptionSet p = new OptionSet()
                 .Add("file=|f=", f => file = f)
                 .Add("step=|s=", s => step = s)
-                .Add("tag=|t=", t => { tag = t; matchTags = true; });
+                .Add("tag=|t=", t => { tag = t; matchTags = true; })
+                .Add("initial=|i=", i => initialCount = Convert.ToInt32(i));
             var unparsed = p.Parse(args);
 
             FileDataLoader loader = null;
@@ -44,7 +46,7 @@ namespace TSeries
             var index = 0;
             foreach(var t in series.Timestamps)
             {
-                Console.WriteLine("{0}\t{1}", t, series.Values[index]);
+                Console.WriteLine("{0}\t{1}", t, series.Values[index] + initialCount);
                 index++;
             }
         }
