@@ -46,7 +46,7 @@ namespace TSeries
             var index = 0;
             foreach(var t in series.Timestamps)
             {
-                Console.WriteLine("{0}\t{1}", t, series.Values[index] + initialCount);
+                Console.WriteLine("{0}\t{1}\t{2}", t, series.Values[index] + initialCount, series.Highwater[index]);
                 index++;
             }
         }
