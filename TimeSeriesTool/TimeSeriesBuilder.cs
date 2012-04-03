@@ -48,7 +48,7 @@ namespace TimeSeriesTool
                 VariableStepCount.Add(runningCount);
 
                 currentIndex++;
-                if (currentIndex == currentList.Length || currentList[currentIndex] > otherList[otherIndex])
+                if (currentIndex == currentList.Length || otherIndex == otherList.Length || currentList[currentIndex] > otherList[otherIndex])
                 {
                     var tempIndex = currentIndex;
                     currentIndex = otherIndex;
