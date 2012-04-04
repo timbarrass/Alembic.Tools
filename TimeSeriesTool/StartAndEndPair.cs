@@ -7,12 +7,10 @@ namespace TimeSeriesTool
     [DelimitedRecord(",")]
     public class StartAndEndPair
     {
-        //[FieldConverter(ConverterKind.Date, "dd-MM-yyyy HH:mm:ss.fffff")] 
         [FieldConverter(typeof(CustomDateTimeConverter))]
         public DateTime Start;
 
-        //[FieldConverter(ConverterKind.Date, "dd-MM-yyyy HH:mm:ss.fffff")] 
-        [FieldConverter(typeof(CustomDateTimeConverter))]
+        [FieldConverter(typeof(CustomEndTimeConverter))]
         public DateTime End;
 
         public StartAndEndPair()
@@ -26,20 +24,23 @@ namespace TimeSeriesTool
         }
     }
 
-    //internal class CustomDateTimeConverter : ConverterBase
-    //{
-    //    private const string DateTimeFormat = "yyyyMMdd HH:mm:ss";
-
-    //    public override object StringToField(string from)
-    //    {
-    //        return DateTime.ParseExact(from, DateTimeFormat, CultureInfo.InvariantCulture);
-    //    }
-    //}
-
     internal class CustomDateTimeConverter : ConverterBase
     {
         public override object StringToField(string from)
         {
+            return DateTime.Parse(from);
+        }
+    }
+
+    internal class CustomEndTimeConverter : ConverterBase
+    {
+        public override object StringToField(string from)
+        {
+            if(string.IsNullOrEmpty(from))
+            {
+                return DateTime.MaxValue;
+            }
+
             return DateTime.Parse(from);
         }
     }
