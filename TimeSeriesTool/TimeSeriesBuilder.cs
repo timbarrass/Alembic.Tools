@@ -90,13 +90,16 @@ namespace TimeSeriesTool
                 var next = current.AddTicks(dt.Ticks);
 
                 currentHighwater = VariableStepCount[index];
-                
+
+                var previousStamp = VariableStepTimestamp[0];
                 while (index < VariableStepTimestamp.Count - 1
                        && VariableStepTimestamp[index + 1] < next)
                 {
                     index++;
-                    if (currentHighwater <= VariableStepCount[index])
+                    if (currentHighwater <= VariableStepCount[index] && ! VariableStepTimestamp[index].Equals(previousStamp))
                         currentHighwater = VariableStepCount[index];
+
+                    previousStamp = VariableStepTimestamp[index];
                 }
 
                 timestamps[counter] = current;

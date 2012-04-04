@@ -12,7 +12,7 @@ namespace TSeries
         {
             if (args.Length == 0)
             {
-                Console.WriteLine("Usage: tseries file|f=<data file> [step|s=<fixed step size, as dd:hh:mm:ss.]");
+                Console.WriteLine("Usage: tseries -file|-f=<data file> [-step|-s=<fixed step size, as dd:hh:mm:ss.] [-tag|-t=<tag, to filter desired rows>]");
                 return;
             }
 
