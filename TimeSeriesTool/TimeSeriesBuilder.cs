@@ -17,8 +17,6 @@ namespace TimeSeriesTool
             starts = new DateTime[startsAndEnds.Length];
             ends = new DateTime[startsAndEnds.Length];
 
-            Array.Sort(startsAndEnds, (x, y) => x.Start.CompareTo(y.Start));
-
             int count = 0;
             foreach(var pair in startsAndEnds)
             {
@@ -26,6 +24,9 @@ namespace TimeSeriesTool
                 ends[count] = pair.End;
                 count++;
             }
+
+            Array.Sort(starts);
+            Array.Sort(ends);
         }
 
         public void BuildVariableStepTimeSeries(DateTime[] starts, DateTime[] ends)
