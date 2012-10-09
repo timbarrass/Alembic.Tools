@@ -46,11 +46,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GraphTests.cs" />
     <Compile Include="HistogramTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimeSeriesTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GraphTool\GraphTool.csproj">
+      <Project>{06CF20AD-9C92-4AD1-8ED9-4C09594ED6C8}</Project>
+      <Name>GraphTool</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HistogramTool\HistogramTool.csproj">
       <Project>{4980D0DB-B8F5-465E-8359-E5491B19FDB5}</Project>
       <Name>HistogramTool</Name>
