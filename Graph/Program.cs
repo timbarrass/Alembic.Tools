@@ -53,6 +53,14 @@ namespace Graph
 
             Console.WriteLine("Max concurrency:   " + algo.MaxConcurrency);
             Console.WriteLine("Concurrent chains: " + algo.ConcurrencyChains.Count);
+
+            var sortedChains = new List<string>();
+            algo.ConcurrencyChains.ForEach(c => sortedChains.Add(string.Join("-", c.OrderBy(n => n.Name).Select(n => n.Name))));
+            sortedChains.Sort();
+
+            var distinct = sortedChains.Distinct();
+
+            Console.WriteLine("Distinct chains:   " + distinct.Count());
         }
     }
 

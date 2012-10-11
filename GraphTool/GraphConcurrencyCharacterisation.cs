@@ -1,54 +1,55 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace GraphTool
 {
     public class GraphConcurrencyCharacterisation
     {
-        public void Run(IDictionary<string, Node> allNodes)
-        {
-            foreach (var root in allNodes.Values)
-            {
-                //Console.WriteLine("root: " + root.Name);
-
-                IEnumerable<Node> greyList = allNodes.Values;
-
-                GetNextSteps(greyList, root);
-            }
-        }
-
         public int MaxConcurrency;
 
         public List<List<Node>> ConcurrencyChains = new List<List<Node>>();
 
-        private void GetNextSteps(IEnumerable<Node> greyList, Node currentNode)
+
+        public void Run(IDictionary<string, Node> allNodes)
         {
-            _currentChain.Push(currentNode);
+            foreach (var root in allNodes.Values)
+            {
+                var greyList = allNodes.Values;
+
+                GetNextSteps(new Stack<Node>(), greyList, root);
+
+                _previouslySeenRoots.Add(root);
+            }
+        }
+
+        private void GetNextSteps(Stack<Node> currentChain, IEnumerable<Node> greyList, Node currentNode)
+        {
+            currentChain.Push(currentNode);
 
             var newGreyList =
-                greyList.Except(currentNode.Antecedents()).Except(currentNode.Descendents()).Distinct();
+                greyList
+                    .Except(currentNode.Antecedents())
+                    .Except(currentNode.Descendents())
+                    .Distinct();
 
-            if (newGreyList.Count() == 0) // end of chain condition -- update state
+            if (newGreyList.Count() == 0)
             {
-                //foreach (var n in _currentChain) Console.Write(n.Name + "-");
+                ConcurrencyChains.Add(currentChain.ToList());
 
-                //Console.WriteLine("");
-
-                ConcurrencyChains.Add(_currentChain.ToList());
-
-                MaxConcurrency = Math.Max(MaxConcurrency, (int) _currentChain.Count);
+                MaxConcurrency = Math.Max(MaxConcurrency, (int) currentChain.Count);
             }
 
             foreach (var newPossible in newGreyList)
             {
-                GetNextSteps(newGreyList, newPossible);
+                if (_previouslySeenRoots.Contains(newPossible)) continue;
+
+                GetNextSteps(currentChain, newGreyList, newPossible);
             }
 
-            _currentChain.Pop();
+            currentChain.Pop();
         }
 
-        private readonly Stack<Node> _currentChain = new Stack<Node>();
+        private readonly List<Node> _previouslySeenRoots = new List<Node>(); 
     }
 }
